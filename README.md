@@ -23,5 +23,5 @@ deliberately vulnerable commit that gets blocked.
 ```
 make setup          # enable the gitleaks pre-commit hook
 make gitleaks       # full-history secret scan (docker)
-make status-pages   # rebuild the private STF hub, plane dashboard and spec pages (see scripts/status-pages/README.md)
+make status-pages   # rebuild the private STF hub, plane dashboard and spec pages (runs `stf pages`)
 ```
