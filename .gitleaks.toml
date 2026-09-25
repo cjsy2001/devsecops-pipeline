@@ -1,0 +1,9 @@
+title = "devsecops-pipeline"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "stf plane session ids are random UUIDs, not credentials — only this exact field shape is exempt"
+regexTarget = "line"
+regexes = ['''"run_key": ?"(lifecycle|implement|analyze|other)-(\d{3}|x)-\d{8}-\d+"''', '''"session_id": ?"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"''', '''"emitted_session": ?"[0-9a-f-]{36}"''']

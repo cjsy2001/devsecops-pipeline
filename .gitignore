@@ -1,0 +1,24 @@
+# plane cache and rendered views (the committed record is .stf/export/)
+.stf/*.db*
+.stf/dashboard.html
+.stf/export/*.tmp-*
+
+# secrets & local state — never committed
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+id_rsa*
+*.tfstate
+*.tfstate.*
+.terraform/
+*.tfvars
+!*.tfvars.example
+
+# python
+.venv/
+__pycache__/
+.pytest_cache/
+coverage/
