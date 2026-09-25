@@ -1,6 +1,6 @@
 """PostToolUse hook: after an stf plane write, rebuild the local status pages and remind Claude to republish them.
 
-Pages (URLs in pages.json): the plane dashboard (`stf dashboard`) and one spec page per spec (render_spec.py).
+Pages (URLs in pages.json): the hub (render_hub.py), the plane dashboard (`stf dashboard`) and one spec page per spec (render_spec.py).
 Wired in this repo's .claude/settings.json only. Never blocks or fails the tool call: every error path exits 0.
 Publishing stays with Claude (the Artifact tool); this hook only rebuilds the local HTML files.
 """
@@ -13,9 +13,10 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent.parent
-PAGES = HERE / "pages.json"  # {"dashboard": "<url>", "specs": {"<seq>": "<url>"}}
+PAGES = HERE / "pages.json"  # {"hub": "<url>", "dashboard": "<url>", "specs": {"<seq>": "<url>"}}
 TOOL_PREFIX = "mcp__plugin_stf_stf__"
 DASHBOARD_OUT = REPO / ".stf/dashboard.html"
+HUB_OUT = REPO / ".stf/hub.html"
 
 
 def emit(context=None, message=None):
@@ -97,6 +98,9 @@ def main():
     stf = stf_binary()
     ok, out = run([stf, "dashboard", str(DASHBOARD_OUT)], 60) if stf else (False, "stf CLI not found in the plugin cache")
     if ok:
+        # the plugin titles every dashboard "STF Plane Dashboard"; name it per repo so STF pages group in the gallery
+        page = DASHBOARD_OUT.read_text()
+        DASHBOARD_OUT.write_text(page.replace("<title>STF Plane Dashboard</title>", f"<title>STF · {REPO.name} dashboard</title>", 1))
         lines.append(target("dashboard", DASHBOARD_OUT, pages.get("dashboard")))
     else:
         errors.append(f"dashboard: {out}")
@@ -112,6 +116,13 @@ def main():
             continue
         out_path = json.loads(out.strip().splitlines()[-1])["out"]
         lines.append(target(f"spec {seq:03d}", out_path, (pages.get("specs") or {}).get(str(seq))))
+
+    # the hub links every page above; it is stdlib-only and rebuilt last so it reflects the same plane state
+    ok, out = run([sys.executable, str(HERE / "render_hub.py"), "--out", str(HUB_OUT)], 30)
+    if ok:
+        lines.append(target("hub", HUB_OUT, pages.get("hub")))
+    else:
+        errors.append(f"hub: {out}")
 
     context = None
     if lines:
