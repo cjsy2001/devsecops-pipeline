@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Block commits that contain secrets. Installed by `make setup` (core.hooksPath=.githooks).
+set -euo pipefail
+if command -v gitleaks >/dev/null 2>&1; then
+  exec gitleaks git --pre-commit --staged --redact --no-banner --config .gitleaks.toml
+elif command -v docker >/dev/null 2>&1; then
+  exec docker run --rm -v "$PWD:/repo" -w /repo zricethezav/gitleaks:v8.30.1 git --pre-commit --staged --redact --no-banner --config .gitleaks.toml
+else
+  echo "pre-commit: gitleaks not found (install it or docker) — refusing to commit unscanned." >&2
+  exit 1
+fi
