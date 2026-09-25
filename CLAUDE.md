@@ -25,6 +25,11 @@ root, its specs, and its own plane.
 2. **Work** through `/stf:spec-lifecycle`, `/stf:implement N`, `/stf:decide`, `/stf:memory`.
 3. **End.** Checkpoint, `stf_complete_run`, then `/stf:handoff emit`.
 
+**Status pages** (`/stf:pages`): private Claude artifacts give read-only views of this plane: a pinned hub,
+the plane dashboard, and one spec page per spec, all titled `STF · …`. Their URLs are in `.stf/pages.json`. The stf plugin's hook
+rebuilds `.stf/hub.html`, `.stf/dashboard.html` and `.stf/spec-page-NNN.html` after each stf plane write. Republish each to its recorded URL
+(Artifact `url=…`, never a new page) once per phase or task boundary. After using the `stf` CLI by hand, run `stf pages` (or `make status-pages`).
+
 ## Rules
 
 - No task is done without `stf_capture_task_outcome` and hashed evidence. Say "tests pass", "deployed" or
@@ -37,6 +42,7 @@ root, its specs, and its own plane.
 
 ```
 claude plugin install stf@secops-task-factory --scope project   # once per machine (the factory repo is private)
+stf init        # only if .stf/ is missing (stf_* tools return `no_plane`): run at the repo root to create the empty plane
 make setup      # core.hooksPath=.githooks → gitleaks pre-commit hook
 make gitleaks   # full-history secret scan (docker)
 ```

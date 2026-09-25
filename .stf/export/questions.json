@@ -1,0 +1,38 @@
+[
+  {
+    "context": "FR-015; .claude/rules/azure.md requires this decided at clarify as a D-NNN.",
+    "created_at": "2026-09-25T17:18:36Z",
+    "local_id": "OQ-001",
+    "question": "Which Azure region, subscription and naming prefix does the deployment use?",
+    "resolution": "Deploy to eastus on the owner's personal pay-as-you-go subscription. Naming prefix 'stf'; resource group rg-stf-devsecops-pipeline. Subscription, tenant and client IDs live only in GitHub Actions secrets/variables, never in the repo.",
+    "resolved_by": "D-001",
+    "seq": 1,
+    "spec_ref": "Q-001",
+    "status": "resolved",
+    "updated_at": "2026-09-25T17:20:51Z"
+  },
+  {
+    "context": "FR-012",
+    "created_at": "2026-09-25T17:18:37Z",
+    "local_id": "OQ-002",
+    "question": "Which finding severities block the SAST, dependency, image and IaC gates?",
+    "resolution": "SAST, dependency, image and IaC gates fail on findings of severity HIGH or CRITICAL. The threshold is defined once and reused by every gate. Unfixed vulnerabilities are ignored for the Trivy vuln scans, and any other suppression needs a justified entry in an ignore file.",
+    "resolved_by": "D-002",
+    "seq": 1,
+    "spec_ref": "Q-002",
+    "status": "resolved",
+    "updated_at": "2026-09-25T17:20:54Z"
+  },
+  {
+    "context": "FR-017",
+    "created_at": "2026-09-25T17:18:37Z",
+    "local_id": "OQ-003",
+    "question": "Does production deploy automatically on a green main, or behind a GitHub environment with manual approval?",
+    "resolution": "The deploy job runs automatically on push to main once every gate job succeeds, with no manual approval environment. Images are pushed to GitHub Container Registry only after the Trivy image scan passes, and are deployed by digest.",
+    "resolved_by": "D-003",
+    "seq": 1,
+    "spec_ref": "Q-003",
+    "status": "resolved",
+    "updated_at": "2026-09-25T17:20:56Z"
+  }
+]

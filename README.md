@@ -21,6 +21,7 @@ deliberately vulnerable commit that gets blocked.
 ## Local setup
 
 ```
-make setup      # enable the gitleaks pre-commit hook
-make gitleaks   # full-history secret scan (docker)
+make setup          # enable the gitleaks pre-commit hook
+make gitleaks       # full-history secret scan (docker)
+make status-pages   # rebuild the private STF hub, plane dashboard and spec pages (runs `stf pages`)
 ```
