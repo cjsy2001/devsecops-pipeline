@@ -1,12 +1,4 @@
 {
-  "extraKnownMarketplaces": {
-    "secops-task-factory": {
-      "source": { "source": "github", "repo": "cjsy2001/secops-task-factory" }
-    }
-  },
-  "enabledPlugins": {
-    "stf@secops-task-factory": true
-  },
   "permissions": {
     "allow": [
       "mcp__plugin_stf_stf",
@@ -15,5 +7,16 @@
       "Bash(git diff:*)",
       "Bash(git log:*)"
     ]
+  },
+  "enabledPlugins": {
+    "stf@secops-task-factory": true
+  },
+  "extraKnownMarketplaces": {
+    "secops-task-factory": {
+      "source": {
+        "source": "github",
+        "repo": "cjsy2001/secops-task-factory"
+      }
+    }
   }
 }
