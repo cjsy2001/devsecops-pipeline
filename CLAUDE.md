@@ -25,9 +25,9 @@ root, its specs, and its own plane.
 2. **Work** through `/stf:spec-lifecycle`, `/stf:implement N`, `/stf:decide`, `/stf:memory`.
 3. **End.** Checkpoint, `stf_complete_run`, then `/stf:handoff emit`.
 
-**Status pages** (see `scripts/status-pages/README.md`): private Claude artifacts give read-only views of this plane: the
-plane dashboard and one spec page per spec. Their URLs are in `scripts/status-pages/pages.json`. A project `PostToolUse` hook
-rebuilds `.stf/dashboard.html` and `.stf/spec-page-NNN.html` after each stf plane write. Republish each to its recorded URL
+**Status pages** (see `scripts/status-pages/README.md`): private Claude artifacts give read-only views of this plane: a pinned hub,
+the plane dashboard, and one spec page per spec, all titled `STF · …`. Their URLs are in `scripts/status-pages/pages.json`. A project `PostToolUse` hook
+rebuilds `.stf/hub.html`, `.stf/dashboard.html` and `.stf/spec-page-NNN.html` after each stf plane write. Republish each to its recorded URL
 (Artifact `url=…`, never a new page) once per phase or task boundary. After using the `stf` CLI by hand, run `make status-pages`.
 
 ## Rules

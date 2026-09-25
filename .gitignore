@@ -2,6 +2,7 @@
 .stf/*.db*
 .stf/dashboard.html
 .stf/spec-page-*.html
+.stf/hub.html
 .stf/export/*.tmp-*
 
 # secrets & local state — never committed
