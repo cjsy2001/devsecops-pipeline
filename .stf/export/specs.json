@@ -1,0 +1,25 @@
+[
+  {
+    "artefacts": {
+      "clarify": {
+        "specs/001-devsecops-pipeline/spec.md": "48f67020c9bc40998af44bf1913dfa53a400a7fc9712e12825c1a5c38fc6e01c"
+      },
+      "plan": {
+        "specs/001-devsecops-pipeline/plan.md": "7d60594a6b2ea957e1517ff0f8e3b20d40b8ee2d4fa1f8c38840185803084060",
+        "specs/001-devsecops-pipeline/research.md": "6abbb9dff881e06aed81ef343177f15861354f95574212ef50e2165a879a7b1b"
+      },
+      "specify": {
+        "specs/001-devsecops-pipeline/spec.md": "68bcf8f334e229baedc72b3f8f8253ad8fbb66082df671433a13b297d095734f"
+      }
+    },
+    "created_at": "2026-09-25T17:16:56Z",
+    "gate": null,
+    "health": null,
+    "phase": "tasks",
+    "seq": 1,
+    "slug": "devsecops-pipeline",
+    "summary": "A production-style CI/CD pipeline for a small web API: every push is built, tested and scanned for secrets, insecure code, vulnerable dependencies and image/IaC misconfiguration, and deploys to Azure only when every gate passes. Each gate is demonstrable with a deliberately vulnerable commit that gets blocked.",
+    "title": "DevSecOps Pipeline",
+    "updated_at": "2026-09-25T17:30:52Z"
+  }
+]

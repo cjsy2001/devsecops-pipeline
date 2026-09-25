@@ -1,0 +1,22 @@
+[
+  {
+    "completed_at": "2026-09-25T17:21:59Z",
+    "kind": "lifecycle",
+    "run_key": "lifecycle-001-20260925-1",
+    "seq": 1,
+    "session_id": "ee739c84-5b4a-48a8-8363-cf18c7a948b0",
+    "started_at": "2026-09-25T17:16:58Z",
+    "status": "completed",
+    "summary": "Spec 001 chartered, specified (3 open questions) and clarified (D-001..D-003); phase is now plan."
+  },
+  {
+    "completed_at": "2026-09-25T17:30:57Z",
+    "kind": "lifecycle",
+    "run_key": "lifecycle-001-20260925-2",
+    "seq": 1,
+    "session_id": "ee739c84-5b4a-48a8-8363-cf18c7a948b0",
+    "started_at": "2026-09-25T17:22:55Z",
+    "status": "completed",
+    "summary": "Plan phase done: research.md (R-01..R-15, cited) + plan.md; D-004..D-009, ALT-010..013; phase now tasks."
+  }
+]

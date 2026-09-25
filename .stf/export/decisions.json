@@ -1,0 +1,152 @@
+[
+  {
+    "consequences": "The plan must verify Container Apps consumption availability and pricing in eastus. Cost is governed by NFR-004 and the teardown.",
+    "created_at": "2026-09-25T17:20:51Z",
+    "local_id": "D-001",
+    "rationale": "User choice at clarify (Q-001); the naming follows .claude/rules/azure.md (rg-stf-<slug>). A personal subscription avoids org approval for OIDC and role assignments.",
+    "rejects": [
+      "ALT-001",
+      "ALT-002",
+      "ALT-003",
+      "ALT-004",
+      "ALT-005"
+    ],
+    "resolves": [
+      "OQ-001"
+    ],
+    "seq": 1,
+    "statement": "Deploy to eastus on the owner's personal pay-as-you-go subscription. Naming prefix 'stf'; resource group rg-stf-devsecops-pipeline. Subscription, tenant and client IDs live only in GitHub Actions secrets/variables, never in the repo.",
+    "status": "accepted",
+    "supersedes": [],
+    "title": "Azure region, subscription and naming",
+    "updated_at": "2026-09-25T17:20:51Z"
+  },
+  {
+    "consequences": null,
+    "created_at": "2026-09-25T17:20:54Z",
+    "local_id": "D-002",
+    "rationale": "User choice at clarify (Q-002). It is industry-typical, keeps demo defects easy to trigger, and avoids low/medium noise.",
+    "rejects": [
+      "ALT-006",
+      "ALT-007"
+    ],
+    "resolves": [
+      "OQ-002"
+    ],
+    "seq": 1,
+    "statement": "SAST, dependency, image and IaC gates fail on findings of severity HIGH or CRITICAL. The threshold is defined once and reused by every gate. Unfixed vulnerabilities are ignored for the Trivy vuln scans, and any other suppression needs a justified entry in an ignore file.",
+    "status": "accepted",
+    "supersedes": [],
+    "title": "Blocking severity HIGH + CRITICAL",
+    "updated_at": "2026-09-25T17:20:54Z"
+  },
+  {
+    "consequences": "The plan must verify how Container Apps pulls from GHCR (public package, or a registry credential held as a Container Apps secret, never in git).",
+    "created_at": "2026-09-25T17:20:56Z",
+    "local_id": "D-003",
+    "rationale": "User choice at clarify (Q-003). Required status checks on main already gate the merge. GHCR is free for a public repo and avoids a fixed ACR cost.",
+    "rejects": [
+      "ALT-008",
+      "ALT-009"
+    ],
+    "resolves": [
+      "OQ-003"
+    ],
+    "seq": 1,
+    "statement": "The deploy job runs automatically on push to main once every gate job succeeds, with no manual approval environment. Images are pushed to GitHub Container Registry only after the Trivy image scan passes, and are deployed by digest.",
+    "status": "accepted",
+    "supersedes": [],
+    "title": "Auto deploy on green main, images on GHCR",
+    "updated_at": "2026-09-25T17:20:56Z"
+  },
+  {
+    "consequences": null,
+    "created_at": "2026-09-25T17:29:23Z",
+    "local_id": "D-004",
+    "rationale": "trivy-action tags were hijacked in March 2026 (CVE-2026-33634). Digest pins are immutable. Separating the report from the gate makes the gate independent of SARIF severity quirks (research.md R-03..R-05).",
+    "rejects": [
+      "ALT-010"
+    ],
+    "resolves": [],
+    "seq": 1,
+    "statement": "Gitleaks, Trivy and Semgrep run via `docker run` on official images pinned by digest (no trivy-action, no Semgrep action). Each Trivy/Semgrep gate does a SARIF report run (all severities, uploaded to code scanning) and a separate gate run with HIGH,CRITICAL (Semgrep: ERROR) and a non-zero exit on findings.",
+    "status": "accepted",
+    "supersedes": [],
+    "title": "Scanners as digest-pinned containers, report run + gate run",
+    "updated_at": "2026-09-25T17:29:23Z"
+  },
+  {
+    "consequences": null,
+    "created_at": "2026-09-25T17:29:25Z",
+    "local_id": "D-005",
+    "rationale": "Trivy scans uv.lock including transitive dependencies (requirements.txt only == pins, no transitive). Dependabot supports the uv ecosystem (research.md R-01, R-02).",
+    "rejects": [],
+    "resolves": [],
+    "seq": 1,
+    "statement": "The API is FastAPI on Python 3.12 with pytest, dependencies locked in uv.lock, and it's built with uv's multi-stage Docker pattern on python:3.12-slim-trixie.",
+    "status": "accepted",
+    "supersedes": [],
+    "title": "App stack: Python 3.12, FastAPI, uv.lock",
+    "updated_at": "2026-09-25T17:29:25Z"
+  },
+  {
+    "consequences": "Polish follow-up: try Container Apps Contributor + ManagedEnvironments Contributor in place of Contributor.",
+    "created_at": "2026-09-25T17:29:28Z",
+    "local_id": "D-006",
+    "rationale": "This is a public repo, so fork-reachable workflows must not hold cloud access. Narrower Container Apps roles exist but their coverage of Terraform's calls is unverified, and RG-scoped Contributor is permitted by the rules (research.md R-12).",
+    "rejects": [
+      "ALT-013"
+    ],
+    "resolves": [],
+    "seq": 1,
+    "statement": "One Entra app registration with a single federated credential `repo:cjsy2001/devsecops-pipeline:ref:refs/heads/main`. Roles: Contributor on rg-stf-devsecops-pipeline only, and Storage Blob Data Contributor on the tfstate container only. PR runs get no Azure access (static IaC checks only).",
+    "status": "accepted",
+    "supersedes": [],
+    "title": "CI identity: OIDC for main only, RG-scoped roles",
+    "updated_at": "2026-09-25T17:29:28Z"
+  },
+  {
+    "consequences": null,
+    "created_at": "2026-09-25T17:29:31Z",
+    "local_id": "D-007",
+    "rationale": "Verified against the azurerm container_app docs and the ACA containers doc; the feature request is microsoft/azure-container-apps#1001 (research.md R-09).",
+    "rejects": [],
+    "resolves": [],
+    "seq": 1,
+    "statement": "Container Apps exposes no read-only-rootfs, capability or runAsNonRoot settings. The image sets a numeric non-root USER (enforced by the trivy config non-root check), and CI runs the image locally under --read-only --cap-drop ALL --security-opt no-new-privileges --user 10001 to prove it works under the full profile. The gap is documented as a platform exception in the plan and README.",
+    "status": "accepted",
+    "supersedes": [],
+    "title": "Container Apps hardening platform exception",
+    "updated_at": "2026-09-25T17:29:31Z"
+  },
+  {
+    "consequences": null,
+    "created_at": "2026-09-25T17:29:33Z",
+    "local_id": "D-008",
+    "rationale": "GitHub docs: a job skipped by `if:` reports Success and doesn't block a merge even when required. `needs:` works only within one workflow run. Duplicate job names across workflows make checks ambiguous (research.md R-14).",
+    "rejects": [],
+    "resolves": [],
+    "seq": 1,
+    "statement": "ci.yml holds the build-test, secrets (calls secrets.yml via workflow_call), sast, deps, iac and image jobs. deploy needs all of them and runs only on push to main. secrets.yml keeps workflow_dispatch and a weekly schedule. Branch protection requires build-test and every gate job, never deploy.",
+    "status": "accepted",
+    "supersedes": [],
+    "title": "Single ci.yml; secrets.yml reusable; deploy never a required check",
+    "updated_at": "2026-09-25T17:29:33Z"
+  },
+  {
+    "consequences": null,
+    "created_at": "2026-09-25T17:29:35Z",
+    "local_id": "D-009",
+    "rationale": "The first 5 GB/month per billing account is free, so the expected cost is $0, and it gives something to inspect when the smoke test fails (research.md R-10).",
+    "rejects": [
+      "ALT-012"
+    ],
+    "resolves": [],
+    "seq": 1,
+    "statement": "The Container Apps environment uses logs_destination = log-analytics with a PerGB2018 workspace, 30-day retention and a daily ingestion cap.",
+    "status": "accepted",
+    "supersedes": [],
+    "title": "Logs to Log Analytics with a daily cap",
+    "updated_at": "2026-09-25T17:29:35Z"
+  }
+]
